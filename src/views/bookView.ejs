@@ -1,0 +1,19 @@
+<html>
+<head>
+</head>
+<body>
+<h1>
+    Welcome to <%=title%>
+</h1>
+<ul>
+    <%for(var i=0; i<nav.length; i++){%>
+    <li>
+        <a href="<%=nav[i].link%>"><%=nav[i].title %></a>
+    </li>
+    <%}%>
+</ul>
+<h3><%=book.title%></h3>
+<br><%=book.details.description%></br>
+
+</body>
+</html>

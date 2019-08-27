@@ -1,0 +1,18 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <h1>
+            Welcome to <%=title%>
+        </h1>
+        <div class = 'row'>
+            <ul>
+                <%for(var i=0; i<nav.length; i++){%>
+                    <li>
+                        <a href="<%=nav[i].link%>"><%=nav[i].title %></a>
+                    </li>
+                <%}%>
+            </ul>
+        </div>
+    </body>
+</html>

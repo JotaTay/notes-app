@@ -1,0 +1,29 @@
+<html>
+<head>
+</head>
+<body>
+<h1>
+    Welcome to <%= title %>
+</h1>
+<div class="row">
+    <br>
+    <div class="col-md-2 col-sm-3 text-center">
+        Sign Up!
+        <form name="signUpForm" action="/auth/signup" method="post">
+            UserName: <input name="username" id="username"/><br/>
+            Password: <input name="password" id="password"/><br/>
+            <input type="submit" value="Sign up"/>
+        </form>
+    </div>
+</div>
+<div class='row'>
+    <ul>
+        <% for(var i = 0; i < nav.length; i++){ %>
+            <li>
+                <a href="<%= nav[i].link %>"><%= nav[i].title %></a>
+            </li>
+        <% } %>
+    </ul>
+</div>
+</body>
+</html>
