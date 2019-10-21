@@ -6,6 +6,8 @@ const bookService = require('../services/goodreadsService');
 const debug = require('debug')('app:bookRoutes');
 
 function router(nav) {
+// setting constant from the returns of functions in bookController.
+// Passing bookService.
 const { getIndex, getById, middleware} = bookController(bookService, nav);
 
     bookRouter.use(middleware);
