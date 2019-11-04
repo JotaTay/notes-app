@@ -29,6 +29,11 @@ require('./src/config/passport.js')(app);
 // Mounts the specified middleware function or functions at the specified path:
 // the middleware function is executed when the base of the requested path matches path.
 // https://expressjs.com/en/4x/api.html#app.use
+app.use(session({
+    secret: 'library',
+    resave: false,
+    saveUnititialized: true
+}));
 app.use('/books', bookRouter);
 app.use('/admin', adminRouter);
 app.use('/auth', authRouter);
@@ -38,7 +43,6 @@ app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({secret: 'library'}));
 app.use(express.static(path.join(__dirname, '/public/')));
 app.use('/css', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/css/')));
 app.use('/js', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/js/')));

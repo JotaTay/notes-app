@@ -1,14 +1,15 @@
 const express = require('express');
 const noteRouter = express.Router();
-const {MongoClient, ObjectId} = require('mongodb');
 const noteController = require('../controllers/noteController');
-const evernoteService = require('../services/evernoteService');
-const debug = require('debug')('app:bookRoutes');
+const debug = require('debug')('app:noteRoutes');
 
 router = (nav) => {
-    const { authorize } = noteController(evernoteService, nav);
+    const { displayHome, oauth, oauth_callback, clear } = noteController(nav);
     // noteRouter.use(middleware);
-    noteRouter.route('/').get( authorize );
+    noteRouter.route('/').get( displayHome );
+    noteRouter.route('/oauth').get( oauth );
+    noteRouter.route('/oauth_callback').get( oauth_callback );
+    // noteRouter.route('/oauth').get( authenticate );
     return noteRouter;
 };
 
