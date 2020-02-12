@@ -3,6 +3,7 @@ const xml2js = require('xml2js');
 const debug = require('debug')('app:goodreadsService');
 const parser = xml2js.Parser({explicitArray: false});
 
+//gets book by ID from goodreads
 function goodreadsService() {
     function getBookById(id) {
         return new Promise((resolve, reject) => {

@@ -13,18 +13,14 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const nav =  [
-    { link: '/books', title: 'Books' },
-    { link: '/auth/signup', title: 'signUp' },
-    { link: '/auth/signin', title: 'signIn' },
-    { link: '/evernote', title: 'evernote' }
+    { link: '/library', title: '{{users}} library' },
+    { link: '/notes', title: 'notes' }
 ];
 
-const bookRouter = require('./src/routes/bookRoutes')(nav);
-const adminRouter = require('./src/routes/adminRoutes')(nav);
+const circulationDeskRouter = require('./src/routes/circulationDeskRoutes')(nav);
 const authRouter = require('./src/routes/authRoutes')(nav);
 const notesRouter = require('./src/routes/noteRoutes')(nav);
 
-require('./src/config/passport.js')(app);
 
 // Mounts the specified middleware function or functions at the specified path:
 // the middleware function is executed when the base of the requested path matches path.
@@ -34,10 +30,11 @@ app.use(session({
     resave: false,
     saveUnititialized: true
 }));
-app.use('/books', bookRouter);
-app.use('/admin', adminRouter);
-app.use('/auth', authRouter);
-app.use('/evernote', notesRouter);
+
+require('./src/config/passport.js')(app);
+// app.use('/library', circulationDeskRouter);
+// app.use('/auth', authRouter);
+// app.use('/notes', notesRouter);
 
 app.use(morgan('combined'));
 app.use(bodyParser.json());
@@ -49,15 +46,47 @@ app.use('/js', express.static(path.join(__dirname, '/node_modules/bootstrap/dist
 app.use('/js', express.static(path.join(__dirname, '/node_modules/jquery/dist')));
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
+app.use('/library', circulationDeskRouter);
+app.use('/auth', authRouter);
+app.use('/notes', notesRouter);
 
-app.get('/', (req, res) => {
+app.get('/login', (req, res) => {
   res.render(
-    'index',
+    'loginView',
     {
-        nav,
-        title: 'Home',
     });
 });
+
+const isLoggedIn = (req, res, next) => {
+    if(req.isAuthenticated()){
+        return next()
+    }
+    res.redirect('/login');
+}
+
+app.get('/', isLoggedIn, (req, res) => {
+      res.render(
+        'index',
+        {
+            nav,
+            title: 'Home',
+        });
+    });
+
+app.get('/401', (req, res) => {
+  res.render(
+    '401',
+    {
+    });
+});
+
+function errorHandler (err, req, res, next) {
+  if (res.headersSent) {
+    return next(err)
+  }
+  res.status(500)
+  res.render('error', { error: err })
+}
 
 app.listen(port, () => {
     debug(`listening on port ${chalk.green(port)}`);
