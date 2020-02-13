@@ -7,15 +7,17 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const get = require('lodash.get');
 
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 const nav =  [
-    { link: '/library', title: '{{users}} library' },
+    { link: '/library', title: 'books' },
     { link: '/notes', title: 'notes' }
 ];
+let username = '';
 
 const circulationDeskRouter = require('./src/routes/circulationDeskRoutes')(nav);
 const authRouter = require('./src/routes/authRoutes')(nav);
@@ -50,14 +52,10 @@ app.use('/library', circulationDeskRouter);
 app.use('/auth', authRouter);
 app.use('/notes', notesRouter);
 
-app.get('/login', (req, res) => {
-  res.render(
-    'loginView',
-    {
-    });
-});
 
 const isLoggedIn = (req, res, next) => {
+    console.log('username', get(req.user, 'username', ''));
+    username = get(req.user, 'username', '');
     if(req.isAuthenticated()){
         return next()
     }
@@ -70,8 +68,16 @@ app.get('/', isLoggedIn, (req, res) => {
         {
             nav,
             title: 'Home',
+            username: username
         });
     });
+
+app.get('/login', (req, res) => {
+  res.render(
+    'loginView',
+    {
+    });
+});
 
 app.get('/401', (req, res) => {
   res.render(
@@ -80,13 +86,11 @@ app.get('/401', (req, res) => {
     });
 });
 
-function errorHandler (err, req, res, next) {
-  if (res.headersSent) {
-    return next(err)
-  }
-  res.status(500)
-  res.render('error', { error: err })
-}
+app.use(function(error, req, res, next) {
+  // Any request to this server will get here, and will send an HTTP
+  // response with the error message 'woops'
+  res.json({ message: error.message });
+});
 
 app.listen(port, () => {
     debug(`listening on port ${chalk.green(port)}`);
