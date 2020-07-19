@@ -31,7 +31,7 @@
     "evernote": "^2.0.5",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "lodash.get": "^4.4.2",
     "lodash.isnil": "^4.0.0",
     "mongodb": "^3.3.0-beta2",
